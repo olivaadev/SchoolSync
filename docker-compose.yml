@@ -1,0 +1,23 @@
+
+services:
+  db:
+    # Baixa a versão 15 do Postgres (alpine é uma versão mais leve e rápida)
+    image: postgres:15-alpine
+    container_name: escola-postgres
+    # Configura o usuário, senha e o nome do banco de dados inicial
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: adminpassword
+      POSTGRES_DB: gestao_escola
+    # Conecta a porta 5432 do seu PC com a porta 5432 do container
+    ports:
+      - "5432:5432"
+    volumes:
+      # O "Pulo do Gato": Pega o seu init.sql e joga na pasta de inicialização do Postgres
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      # Salva os dados no seu PC para o banco não zerar quando você desligar o computador
+      - postgres_data:/var/lib/postgresql/data
+
+# Declara o volume de dados que usamos ali em cima
+volumes:
+  postgres_data:
